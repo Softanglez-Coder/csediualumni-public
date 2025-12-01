@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import {
@@ -306,7 +306,8 @@ export class CommitteeDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private committeeService: CommitteeService
+    private committeeService: CommitteeService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -327,11 +328,13 @@ export class CommitteeDetailsComponent implements OnInit {
         this.committee = committee;
         this.groupMembersByDesignation(committee);
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error loading committee details:', err);
         this.error = true;
         this.loading = false;
+        this.cdr.detectChanges();
       },
     });
   }

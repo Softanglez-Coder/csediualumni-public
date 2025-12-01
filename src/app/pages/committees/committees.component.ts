@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { CommitteeService, Committee } from '../../services/committee.service';
@@ -324,7 +324,11 @@ export class CommitteesComponent implements OnInit {
   currentCommittee: Committee | null = null;
   loading = false;
 
-  constructor(private router: Router, private committeeService: CommitteeService) {}
+  constructor(
+    private router: Router,
+    private committeeService: CommitteeService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadCommittees();
@@ -337,10 +341,12 @@ export class CommitteesComponent implements OnInit {
         this.committees = committees;
         this.currentCommittee = committees.find((c) => c.isCurrent) || null;
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading committees:', error);
         this.loading = false;
+        this.cdr.detectChanges();
       },
     });
   }
