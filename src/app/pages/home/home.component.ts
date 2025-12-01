@@ -33,14 +33,17 @@ import { AuthService, User } from '../../services/auth.service';
             </h1>
           </div>
           <div class="flex items-center gap-4">
-            <div class="flex items-center gap-3 bg-white rounded-2xl px-4 py-2 shadow-md">
+            <div
+              *ngIf="currentUser"
+              class="flex items-center gap-3 bg-white rounded-2xl px-4 py-2 shadow-md"
+            >
               <img
                 *ngIf="currentUser?.avatar"
                 [src]="currentUser?.avatar"
                 [alt]="currentUser?.firstName"
                 class="w-10 h-10 rounded-full ring-2 ring-purple-200"
               />
-              <div *ngIf="currentUser" class="text-sm">
+              <div class="text-sm">
                 <p class="font-semibold text-gray-900">
                   {{ currentUser.firstName }} {{ currentUser.lastName }}
                 </p>
@@ -48,10 +51,25 @@ import { AuthService, User } from '../../services/auth.service';
               </div>
             </div>
             <button
+              *ngIf="currentUser"
+              (click)="goToPortal()"
+              class="px-5 py-2.5 text-sm font-semibold text-purple-600 bg-white rounded-xl hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              Go to Portal
+            </button>
+            <button
+              *ngIf="currentUser"
               (click)="logout()"
               class="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               Logout
+            </button>
+            <button
+              *ngIf="!currentUser"
+              (click)="login()"
+              class="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+            >
+              Login
             </button>
           </div>
         </div>
@@ -64,7 +82,7 @@ import { AuthService, User } from '../../services/auth.service';
           <h2
             class="text-5xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-orange-600 bg-clip-text text-transparent animate-fade-in"
           >
-            Welcome to Your Community! 🎉
+            {{ currentUser ? 'Welcome Back!' : 'Welcome to CSE DIU Alumni Network' }} 🎉
           </h2>
           <p class="text-gray-600 text-xl max-w-2xl mx-auto animate-fade-in-delay">
             Connect with fellow alumni, share experiences, and grow together
@@ -136,11 +154,18 @@ import { AuthService, User } from '../../services/auth.service';
           class="bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 rounded-3xl p-1 shadow-2xl"
         >
           <div class="bg-white rounded-[22px] p-8">
-            <h3 class="text-2xl font-bold text-gray-900 mb-4">You're all set! ✨</h3>
-            <p class="text-gray-600 leading-relaxed">
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">
+              {{ currentUser ? "You're all set! ✨" : 'Join Our Community! ✨' }}
+            </h3>
+            <p class="text-gray-600 leading-relaxed" *ngIf="currentUser">
               Welcome to the CSE DIU Alumni Network. You're now part of a vibrant community of
               talented individuals. Start exploring, connecting, and making the most of your
               membership. If you need any help, don't hesitate to reach out!
+            </p>
+            <p class="text-gray-600 leading-relaxed" *ngIf="!currentUser">
+              Discover a vibrant community of CSE DIU alumni. Login to access exclusive features,
+              connect with fellow graduates, and unlock opportunities for networking and growth.
+              Your journey with our community starts with a simple click!
             </p>
           </div>
         </div>
@@ -177,6 +202,14 @@ export class HomeComponent {
     this.authService.currentUser$.subscribe((user) => {
       this.currentUser = user;
     });
+  }
+
+  login() {
+    this.router.navigate(['/login']);
+  }
+
+  goToPortal() {
+    this.router.navigate(['/portal']);
   }
 
   logout() {

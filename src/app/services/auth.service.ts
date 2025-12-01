@@ -46,6 +46,7 @@ export class AuthService {
     localStorage.setItem('access_token', token);
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSubject.next(user);
+    this.router.navigate(['/portal']);
   }
 
   logout() {

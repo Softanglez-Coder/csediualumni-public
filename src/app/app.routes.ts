@@ -8,6 +8,11 @@ export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'auth/callback', component: AuthCallbackComponent },
-  { path: 'home', component: HomeComponent, canActivate: [authGuard] },
+  { path: 'home', component: HomeComponent },
+  {
+    path: 'portal',
+    loadComponent: () => import('./pages/portal/portal.component').then((m) => m.PortalComponent),
+    canActivate: [authGuard],
+  },
   { path: '**', redirectTo: '/home' },
 ];
