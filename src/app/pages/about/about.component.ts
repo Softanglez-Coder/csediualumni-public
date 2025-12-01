@@ -1,6 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
+import {
+  CommitteeService,
+  Committee,
+  CommitteeMemberWithDesignation,
+} from '../../services/committee.service';
 
 interface Milestone {
   year: string;
@@ -234,7 +239,67 @@ interface Feature {
               </p>
             </div>
 
+            <!-- Loading State -->
+            <div *ngIf="loadingCommittee" class="text-center py-12">
+              <div
+                class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent"
+              ></div>
+              <p class="mt-4 text-gray-600">Loading committee members...</p>
+            </div>
+
+            <!-- Current Committee Members -->
+            <div *ngIf="!loadingCommittee && currentCommittee && committeeMembers.length > 0">
+              <div class="text-center mb-8">
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ currentCommittee.name }}</h3>
+                <p class="text-purple-600 font-semibold">{{ currentCommittee.year }} Committee</p>
+              </div>
+
+              <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+                <div
+                  *ngFor="let member of committeeMembers"
+                  class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 text-center hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-purple-100"
+                >
+                  <div class="mb-4">
+                    <img
+                      *ngIf="member.userId.avatar"
+                      [src]="member.userId.avatar"
+                      [alt]="member.userId.firstName + ' ' + member.userId.lastName"
+                      class="w-24 h-24 rounded-full mx-auto object-cover ring-4 ring-purple-200"
+                    />
+                    <div
+                      *ngIf="!member.userId.avatar"
+                      class="w-24 h-24 rounded-full mx-auto bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center ring-4 ring-purple-200"
+                    >
+                      <span class="text-3xl text-white font-bold">
+                        {{ member.userId.firstName.charAt(0)
+                        }}{{ member.userId.lastName.charAt(0) }}
+                      </span>
+                    </div>
+                  </div>
+                  <h4 class="text-lg font-bold text-gray-900 mb-1">
+                    {{ member.userId.firstName }} {{ member.userId.lastName }}
+                  </h4>
+                  <p class="text-sm text-purple-600 font-semibold mb-2">
+                    {{ member.designation.name }}
+                  </p>
+                  <p class="text-xs text-gray-500">{{ member.userId.email }}</p>
+                </div>
+              </div>
+
+              <div class="text-center">
+                <a
+                  routerLink="/committees"
+                  class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                >
+                  <span>View All Committees</span>
+                  <i class="fas fa-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- No Committee State -->
             <div
+              *ngIf="!loadingCommittee && (!currentCommittee || committeeMembers.length === 0)"
               class="bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 rounded-3xl p-12 text-center text-white shadow-2xl"
             >
               <i class="fas fa-users text-6xl mb-6 opacity-90"></i>
@@ -243,20 +308,6 @@ interface Feature {
                 We're currently building our committee structure and will introduce our team members
                 soon. Stay tuned to meet the passionate individuals leading our community forward!
               </p>
-              <div class="flex flex-wrap justify-center gap-4">
-                <div class="px-6 py-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                  <p class="text-sm font-semibold">President</p>
-                </div>
-                <div class="px-6 py-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                  <p class="text-sm font-semibold">Vice President</p>
-                </div>
-                <div class="px-6 py-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                  <p class="text-sm font-semibold">Secretary</p>
-                </div>
-                <div class="px-6 py-3 bg-white/20 rounded-xl backdrop-blur-sm">
-                  <p class="text-sm font-semibold">Treasurer</p>
-                </div>
-              </div>
             </div>
           </div>
         </section>
@@ -403,7 +454,11 @@ interface Feature {
     `,
   ],
 })
-export class AboutComponent {
+export class AboutComponent implements OnInit {
+  currentCommittee: Committee | null = null;
+  committeeMembers: CommitteeMemberWithDesignation[] = [];
+  loadingCommittee = false;
+
   features: Feature[] = [
     {
       icon: 'fas fa-network-wired',
@@ -470,7 +525,34 @@ export class AboutComponent {
     },
   ];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private committeeService: CommitteeService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    this.loadCurrentCommittee();
+  }
+
+  loadCurrentCommittee(): void {
+    this.loadingCommittee = true;
+    this.committeeService.getCurrentCommittee().subscribe({
+      next: (committee) => {
+        this.currentCommittee = committee;
+        if (committee) {
+          this.committeeMembers = this.committeeService.getMembersWithDesignations(committee);
+        }
+        this.loadingCommittee = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error loading committee:', error);
+        this.loadingCommittee = false;
+        this.cdr.detectChanges();
+      },
+    });
+  }
 
   goToLogin(): void {
     this.router.navigate(['/login']);
