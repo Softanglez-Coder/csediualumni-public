@@ -1,354 +1,44 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
 import { CommitteeService, Committee } from '../../services/committee.service';
 
 @Component({
   selector: 'app-committees',
-  standalone: true,
-  imports: [CommonModule, RouterModule],
-  template: `
-    <div class="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50">
-      <!-- Header -->
-      <header
-        class="bg-white/80 backdrop-blur-xl shadow-lg sticky top-0 z-50 border-b border-purple-100"
-      >
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div
-              class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg"
-            >
-              <i class="fas fa-user-graduate text-white text-xl"></i>
-            </div>
-            <h1
-              class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
-            >
-              CSE DIU Alumni
-            </h1>
-          </div>
-          <nav class="flex items-center gap-6">
-            <a
-              routerLink="/"
-              class="text-gray-600 hover:text-purple-600 transition-colors font-medium"
-            >
-              Home
-            </a>
-            <a
-              routerLink="/about"
-              class="text-gray-600 hover:text-purple-600 transition-colors font-medium"
-            >
-              About
-            </a>
-            <a routerLink="/committees" class="text-purple-600 font-semibold"> Committees </a>
-            <button
-              (click)="goToLogin()"
-              class="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-            >
-              Login
-            </button>
-          </nav>
-        </div>
-      </header>
-
-      <main>
-        <!-- Hero Section -->
-        <section class="relative py-16 px-4 overflow-hidden">
-          <div class="max-w-7xl mx-auto text-center">
-            <div class="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 rounded-full mb-6">
-              <i class="fas fa-users text-purple-600"></i>
-              <span class="text-sm font-semibold text-purple-700">Committees</span>
-            </div>
-            <h1
-              class="text-5xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent leading-tight"
-            >
-              Our Committees
-            </h1>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Meet the dedicated leaders who have guided our alumni community throughout the years.
-            </p>
-          </div>
-          <!-- Decorative Elements -->
-          <div
-            class="absolute top-0 right-0 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"
-          ></div>
-          <div
-            class="absolute bottom-0 left-0 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"
-          ></div>
-        </section>
-
-        <!-- Loading State -->
-        <section *ngIf="loading" class="py-16 px-4">
-          <div class="max-w-7xl mx-auto text-center">
-            <div
-              class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-purple-500 border-t-transparent"
-            ></div>
-            <p class="mt-4 text-gray-600 text-lg">Loading committees...</p>
-          </div>
-        </section>
-
-        <!-- Committees List -->
-        <section *ngIf="!loading" class="py-16 px-4">
-          <div class="max-w-7xl mx-auto">
-            <!-- Current Committee Highlight -->
-            <div *ngIf="currentCommittee" class="mb-16">
-              <div class="text-center mb-8">
-                <div
-                  class="inline-flex items-center gap-2 px-4 py-2 bg-green-100 rounded-full mb-4"
-                >
-                  <i class="fas fa-star text-green-600"></i>
-                  <span class="text-sm font-semibold text-green-700">Current Committee</span>
-                </div>
-                <h2 class="text-3xl font-bold text-gray-900">{{ currentCommittee.name }}</h2>
-              </div>
-
-              <div
-                class="bg-gradient-to-br from-purple-500 via-pink-500 to-orange-500 rounded-3xl p-8 shadow-2xl cursor-pointer hover:shadow-3xl transition-all duration-300 transform hover:scale-[1.02]"
-                (click)="viewCommitteeDetails(currentCommittee._id)"
-              >
-                <div
-                  class="flex flex-col md:flex-row items-center justify-between gap-6 text-white"
-                >
-                  <div class="text-center md:text-left">
-                    <h3 class="text-3xl font-bold mb-2">{{ currentCommittee.name }}</h3>
-                    <p class="text-xl text-purple-100">{{ currentCommittee.year }} Committee</p>
-                    <p *ngIf="currentCommittee.description" class="text-purple-100 mt-2">
-                      {{ currentCommittee.description }}
-                    </p>
-                  </div>
-                  <div class="text-center">
-                    <div class="bg-white/20 rounded-2xl p-6 backdrop-blur-sm">
-                      <p class="text-5xl font-bold mb-2">{{ currentCommittee.members.length }}</p>
-                      <p class="text-purple-100 font-semibold">Members</p>
-                    </div>
-                  </div>
-                </div>
-                <div class="mt-6 flex justify-center md:justify-end">
-                  <button
-                    class="px-6 py-3 bg-white text-purple-600 rounded-xl font-bold hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                  >
-                    <span>View Details</span>
-                    <i class="fas fa-arrow-right ml-2"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- All Committees -->
-            <div>
-              <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">All Committees</h2>
-                <p class="text-lg text-gray-600">
-                  Explore the history of our leadership and contributions
-                </p>
-              </div>
-
-              <div *ngIf="committees.length === 0" class="text-center py-12">
-                <i class="fas fa-inbox text-6xl text-gray-300 mb-4"></i>
-                <p class="text-xl text-gray-500">No committees found</p>
-              </div>
-
-              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div
-                  *ngFor="let committee of committees"
-                  class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 border border-purple-100 cursor-pointer"
-                  (click)="viewCommitteeDetails(committee._id)"
-                >
-                  <div class="flex items-start justify-between mb-4">
-                    <div class="flex-1">
-                      <div class="flex items-center gap-2 mb-2">
-                        <h3 class="text-xl font-bold text-gray-900">{{ committee.name }}</h3>
-                        <span
-                          *ngIf="committee.isCurrent"
-                          class="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full"
-                        >
-                          Current
-                        </span>
-                      </div>
-                      <p class="text-purple-600 font-semibold">{{ committee.year }}</p>
-                    </div>
-                    <div
-                      class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg"
-                    >
-                      <i class="fas fa-users text-white text-xl"></i>
-                    </div>
-                  </div>
-
-                  <p *ngIf="committee.description" class="text-gray-600 text-sm mb-4 line-clamp-2">
-                    {{ committee.description }}
-                  </p>
-
-                  <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <div class="flex items-center gap-4 text-sm text-gray-500">
-                      <div class="flex items-center gap-1">
-                        <i class="fas fa-user-tie"></i>
-                        <span>{{ committee.designations.length }} Roles</span>
-                      </div>
-                      <div class="flex items-center gap-1">
-                        <i class="fas fa-users"></i>
-                        <span>{{ committee.members.length }} Members</span>
-                      </div>
-                    </div>
-                    <i class="fas fa-arrow-right text-purple-600"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <!-- Footer -->
-      <footer class="bg-gray-900 text-white py-12 px-4 mt-16">
-        <div class="max-w-7xl mx-auto">
-          <div class="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div class="flex items-center gap-2 mb-4">
-                <div
-                  class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center"
-                >
-                  <i class="fas fa-user-graduate text-white"></i>
-                </div>
-                <h3 class="text-lg font-bold">CSE DIU Alumni</h3>
-              </div>
-              <p class="text-gray-400 text-sm leading-relaxed">
-                Connecting generations of CSE graduates from Daffodil International University.
-              </p>
-            </div>
-
-            <div>
-              <h4 class="font-bold mb-4">Quick Links</h4>
-              <ul class="space-y-2 text-gray-400 text-sm">
-                <li>
-                  <a routerLink="/" class="hover:text-purple-400 transition-colors">Home</a>
-                </li>
-                <li>
-                  <a routerLink="/about" class="hover:text-purple-400 transition-colors">About</a>
-                </li>
-                <li>
-                  <a routerLink="/committees" class="hover:text-purple-400 transition-colors"
-                    >Committees</a
-                  >
-                </li>
-                <li>
-                  <a routerLink="/login" class="hover:text-purple-400 transition-colors">Login</a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 class="font-bold mb-4">Contact</h4>
-              <ul class="space-y-2 text-gray-400 text-sm">
-                <li>
-                  <i class="fas fa-envelope mr-2"></i>
-                  alumni&#64;diu.edu.bd
-                </li>
-                <li>
-                  <i class="fas fa-phone mr-2"></i>
-                  +880 1234-567890
-                </li>
-                <li>
-                  <i class="fas fa-map-marker-alt mr-2"></i>
-                  Dhaka, Bangladesh
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 class="font-bold mb-4">Follow Us</h4>
-              <div class="flex gap-3">
-                <a
-                  href="#"
-                  class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-purple-600 transition-colors"
-                >
-                  <i class="fab fa-facebook-f"></i>
-                </a>
-                <a
-                  href="#"
-                  class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-purple-600 transition-colors"
-                >
-                  <i class="fab fa-linkedin-in"></i>
-                </a>
-                <a
-                  href="#"
-                  class="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-purple-600 transition-colors"
-                >
-                  <i class="fab fa-twitter"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div class="border-t border-gray-800 pt-8 text-center text-gray-400 text-sm">
-            <p>&copy; 2025 CSE DIU Alumni. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
-    </div>
-  `,
-  styles: [
-    `
-      @keyframes blob {
-        0% {
-          transform: translate(0px, 0px) scale(1);
-        }
-        33% {
-          transform: translate(30px, -50px) scale(1.1);
-        }
-        66% {
-          transform: translate(-20px, 20px) scale(0.9);
-        }
-        100% {
-          transform: translate(0px, 0px) scale(1);
-        }
-      }
-
-      .animate-blob {
-        animation: blob 7s infinite;
-      }
-
-      .animation-delay-2000 {
-        animation-delay: 2s;
-      }
-
-      .line-clamp-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-    `,
-  ],
+  imports: [RouterModule],
+  templateUrl: './committees.component.html',
+  styleUrl: './committees.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CommitteesComponent implements OnInit {
-  committees: Committee[] = [];
-  currentCommittee: Committee | null = null;
-  loading = false;
+  private readonly router = inject(Router);
+  private readonly committeeService = inject(CommitteeService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  constructor(
-    private router: Router,
-    private committeeService: CommitteeService,
-    private cdr: ChangeDetectorRef
-  ) {}
+  readonly committees = signal<Committee[]>([]);
+  readonly currentCommittee = signal<Committee | null>(null);
+  readonly loading = signal(false);
 
   ngOnInit(): void {
     this.loadCommittees();
   }
 
   loadCommittees(): void {
-    this.loading = true;
-    this.committeeService.getAllCommittees().subscribe({
-      next: (committees) => {
-        this.committees = committees;
-        this.currentCommittee = committees.find((c) => c.isCurrent) || null;
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('Error loading committees:', error);
-        this.loading = false;
-        this.cdr.detectChanges();
-      },
-    });
+    this.loading.set(true);
+    this.committeeService
+      .getAllCommittees()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (committees) => {
+          this.committees.set(committees);
+          this.currentCommittee.set(committees.find((c) => c.isCurrent) || null);
+          this.loading.set(false);
+        },
+        error: (error) => {
+          console.error('Error loading committees:', error);
+          this.loading.set(false);
+        },
+      });
   }
 
   viewCommitteeDetails(committeeId: string): void {

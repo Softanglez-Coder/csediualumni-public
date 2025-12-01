@@ -1,17 +1,19 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit {
-  isHovered = signal(false);
-  particles = signal(
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
+  readonly isHovered = signal(false);
+  readonly particles = signal(
     Array.from({ length: 50 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
@@ -21,12 +23,6 @@ export class LoginComponent implements OnInit {
       delay: Math.random() * 2,
     }))
   );
-
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
 
   ngOnInit() {
     // Check if already authenticated

@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 export interface User {
   id: string;
@@ -22,11 +21,14 @@ export interface AuthResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/auth';
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
+  private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
 
-  constructor(private http: HttpClient, private router: Router) {
+  private readonly apiUrl = 'http://localhost:3000/auth';
+  private readonly currentUserSubject = new BehaviorSubject<User | null>(null);
+  readonly currentUser$ = this.currentUserSubject.asObservable();
+
+  constructor() {
     this.loadUserFromStorage();
   }
 

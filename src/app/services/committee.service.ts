@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -43,9 +43,8 @@ export interface CommitteeMemberWithDesignation extends CommitteeMember {
   providedIn: 'root',
 })
 export class CommitteeService {
-  private apiUrl = `${environment.apiUrl}/committees`;
-
-  constructor(private http: HttpClient) {}
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = `${environment.apiUrl}/committees`;
 
   getAllCommittees(): Observable<Committee[]> {
     return this.http.get<Committee[]>(this.apiUrl);

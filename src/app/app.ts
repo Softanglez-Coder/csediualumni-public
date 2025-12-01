@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FooterComponent } from './components/footer/footer.component';
 
@@ -7,5 +7,6 @@ import { FooterComponent } from './components/footer/footer.component';
   templateUrl: './app.html',
   styleUrl: './app.scss',
   imports: [RouterOutlet, FooterComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {}
