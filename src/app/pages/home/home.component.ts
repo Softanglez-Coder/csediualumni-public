@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService, User } from '../../services/auth.service';
+import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [CommonModule, FooterComponent],
   template: `
     <div class="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50">
       <!-- Header -->
@@ -17,14 +18,7 @@ import { AuthService, User } from '../../services/auth.service';
             <div
               class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg"
             >
-              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-                />
-              </svg>
+              <i class="fas fa-user-graduate text-white text-xl"></i>
             </div>
             <h1
               class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent"
@@ -97,14 +91,7 @@ import { AuthService, User } from '../../services/auth.service';
             <div
               class="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg"
             >
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
+              <i class="fas fa-users text-white text-3xl"></i>
             </div>
             <h3 class="text-xl font-bold text-gray-900 mb-2">Connect</h3>
             <p class="text-gray-600">Network with alumni from your batch and beyond</p>
@@ -116,14 +103,7 @@ import { AuthService, User } from '../../services/auth.service';
             <div
               class="w-16 h-16 bg-gradient-to-br from-pink-400 to-pink-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg"
             >
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                />
-              </svg>
+              <i class="fas fa-share-nodes text-white text-3xl"></i>
             </div>
             <h3 class="text-xl font-bold text-gray-900 mb-2">Share</h3>
             <p class="text-gray-600">Share your experiences and insights with the community</p>
@@ -135,14 +115,7 @@ import { AuthService, User } from '../../services/auth.service';
             <div
               class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg"
             >
-              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                />
-              </svg>
+              <i class="fas fa-chart-line text-white text-3xl"></i>
             </div>
             <h3 class="text-xl font-bold text-gray-900 mb-2">Grow</h3>
             <p class="text-gray-600">Access resources and opportunities for growth</p>
@@ -170,6 +143,9 @@ import { AuthService, User } from '../../services/auth.service';
           </div>
         </div>
       </main>
+
+      <!-- Footer -->
+      <app-footer></app-footer>
     </div>
   `,
   styles: [
