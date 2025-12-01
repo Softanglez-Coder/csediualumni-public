@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService, User } from '../../services/auth.service';
-import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, FooterComponent],
+  imports: [CommonModule],
   template: `
     <div class="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50">
       <!-- Header -->
@@ -143,9 +142,6 @@ import { FooterComponent } from '../../components/footer/footer.component';
           </div>
         </div>
       </main>
-
-      <!-- Footer -->
-      <app-footer></app-footer>
     </div>
   `,
   styles: [
