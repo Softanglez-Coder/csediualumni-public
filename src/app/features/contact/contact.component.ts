@@ -19,7 +19,6 @@ export class ContactComponent implements OnInit {
   isSubmitting = false;
   submitSuccess = false;
   submitError = false;
-  particles: Array<{ x: number; y: number; size: number; delay: number }> = [];
 
   ngOnInit() {
     this.contactForm = this.fb.group({
@@ -28,19 +27,6 @@ export class ContactComponent implements OnInit {
       subject: ['', [Validators.required, Validators.maxLength(200)]],
       message: ['', [Validators.required, Validators.maxLength(2000)]],
     });
-
-    this.generateParticles();
-  }
-
-  generateParticles() {
-    for (let i = 0; i < 50; i++) {
-      this.particles.push({
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: Math.random() * 4 + 1,
-        delay: Math.random() * 5,
-      });
-    }
   }
 
   async onSubmit() {

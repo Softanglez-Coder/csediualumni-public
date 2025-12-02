@@ -1,193 +1,236 @@
-<div class="contact-container">
-  <!-- Animated Background -->
-  <div class="background-gradient"></div>
-
-  <!-- Particles -->
-  <div class="particles">
-    @for (particle of particles; track particle) {
-    <div
-      class="particle"
-      [style.left.%]="particle.x"
-      [style.top.%]="particle.y"
-      [style.width.px]="particle.size"
-      [style.height.px]="particle.size"
-      [style.animation-delay.s]="particle.delay"
-    ></div>
-    }
-  </div>
-
+<div
+  class="min-h-screen bg-linear-to-br from-gray-50 via-blue-50/30 to-gray-50 font-['Inter',sans-serif]"
+>
   <!-- Main Content -->
-  <div class="content">
-    <div class="header-section">
-      <div class="icon-wrapper">
-        <i class="fas fa-satellite-dish"></i>
+  <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+    <!-- Header Section -->
+    <div class="text-center mb-12 animate-[fadeIn_0.8s_ease-out]">
+      <div
+        class="inline-flex items-center justify-center w-20 h-20 bg-linear-to-br from-blue-600 to-blue-700 rounded-2xl shadow-lg shadow-blue-500/30 mb-6 animate-[slideDown_0.8s_ease-out] hover:scale-110 transition-transform duration-300"
+      >
+        <i class="fas fa-envelope text-3xl text-white"></i>
       </div>
-      <h1 class="title"><span class="text-gradient">Establish</span> Connection</h1>
-      <p class="subtitle">
-        <i class="fas fa-terminal"></i>
-        Initialize communication protocol with the CSEDI network
+      <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4 tracking-tight">Get in Touch</h1>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+        We'd love to hear from you. Send us a message and we'll respond as soon as possible.
       </p>
     </div>
 
     <!-- Contact Form Card -->
-    <div class="form-card glass-morphism">
-      <div class="card-header">
-        <i class="fas fa-code"></i>
-        <span class="typing-text">contact_form.execute()</span>
+    <div
+      class="bg-white rounded-2xl shadow-xl shadow-gray-200/50 p-8 lg:p-10 mb-10 animate-[slideUp_0.8s_ease-out_0.2s] animate-fill-both hover:shadow-2xl hover:shadow-gray-200/60 transition-shadow duration-300"
+    >
+      <div class="mb-8 pb-6 border-b border-gray-100">
+        <h2 class="text-2xl font-semibold text-gray-900">Send us a Message</h2>
+        <p class="text-sm text-gray-500 mt-1">
+          Fill out the form below and we'll get back to you soon
+        </p>
       </div>
 
-      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form">
-        <!-- Name Field -->
-        <div class="form-group">
-          <label for="name" class="form-label">
-            <i class="fas fa-user-astronaut"></i>
-            <span>Identification</span>
-          </label>
-          <input
-            id="name"
-            type="text"
-            formControlName="name"
-            class="form-input"
-            placeholder="Enter your name..."
-            [class.error]="contactForm.get('name')?.touched && contactForm.get('name')?.invalid"
-          />
-          @if (getFieldError('name')) {
-          <span class="error-message">
-            <i class="fas fa-exclamation-circle"></i>
-            {{ getFieldError('name') }}
-          </span>
-          }
-        </div>
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Name & Email Row -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <!-- Name Field -->
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700 mb-2"> Name </label>
+            <input
+              id="name"
+              type="text"
+              formControlName="name"
+              class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white hover:border-gray-300"
+              [class.!border-red-500]="
+                contactForm.get('name')?.touched && contactForm.get('name')?.invalid
+              "
+              [class.!bg-red-50]="
+                contactForm.get('name')?.touched && contactForm.get('name')?.invalid
+              "
+              placeholder="John Doe"
+            />
+            @if (getFieldError('name')) {
+            <p
+              class="mt-2 text-sm text-red-600 flex items-center gap-1 animate-[slideIn_0.3s_ease-out]"
+            >
+              <i class="fas fa-exclamation-circle text-xs"></i>
+              {{ getFieldError('name') }}
+            </p>
+            }
+          </div>
 
-        <!-- Email Field -->
-        <div class="form-group">
-          <label for="email" class="form-label">
-            <i class="fas fa-at"></i>
-            <span>Communication Channel</span>
-          </label>
-          <input
-            id="email"
-            type="email"
-            formControlName="email"
-            class="form-input"
-            placeholder="your.email@domain.com"
-            [class.error]="contactForm.get('email')?.touched && contactForm.get('email')?.invalid"
-          />
-          @if (getFieldError('email')) {
-          <span class="error-message">
-            <i class="fas fa-exclamation-circle"></i>
-            {{ getFieldError('email') }}
-          </span>
-          }
+          <!-- Email Field -->
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-2"> Email </label>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white hover:border-gray-300"
+              [class.!border-red-500]="
+                contactForm.get('email')?.touched && contactForm.get('email')?.invalid
+              "
+              [class.!bg-red-50]="
+                contactForm.get('email')?.touched && contactForm.get('email')?.invalid
+              "
+              placeholder="john@example.com"
+            />
+            @if (getFieldError('email')) {
+            <p
+              class="mt-2 text-sm text-red-600 flex items-center gap-1 animate-[slideIn_0.3s_ease-out]"
+            >
+              <i class="fas fa-exclamation-circle text-xs"></i>
+              {{ getFieldError('email') }}
+            </p>
+            }
+          </div>
         </div>
 
         <!-- Subject Field -->
-        <div class="form-group">
-          <label for="subject" class="form-label">
-            <i class="fas fa-hashtag"></i>
-            <span>Subject Protocol</span>
+        <div>
+          <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">
+            Subject
           </label>
           <input
             id="subject"
             type="text"
             formControlName="subject"
-            class="form-input"
-            placeholder="What's on your mind?"
-            [class.error]="
+            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white hover:border-gray-300"
+            [class.!border-red-500]="
               contactForm.get('subject')?.touched && contactForm.get('subject')?.invalid
             "
+            [class.!bg-red-50]="
+              contactForm.get('subject')?.touched && contactForm.get('subject')?.invalid
+            "
+            placeholder="How can we help you?"
           />
           @if (getFieldError('subject')) {
-          <span class="error-message">
-            <i class="fas fa-exclamation-circle"></i>
+          <p
+            class="mt-2 text-sm text-red-600 flex items-center gap-1 animate-[slideIn_0.3s_ease-out]"
+          >
+            <i class="fas fa-exclamation-circle text-xs"></i>
             {{ getFieldError('subject') }}
-          </span>
+          </p>
           }
         </div>
 
         <!-- Message Field -->
-        <div class="form-group">
-          <label for="message" class="form-label">
-            <i class="fas fa-message-lines"></i>
-            <span>Data Transmission</span>
+        <div>
+          <label for="message" class="block text-sm font-medium text-gray-700 mb-2">
+            Message
           </label>
           <textarea
             id="message"
             formControlName="message"
-            class="form-textarea"
             rows="6"
-            placeholder="Type your message here..."
-            [class.error]="
+            class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white hover:border-gray-300 resize-vertical"
+            [class.!border-red-500]="
               contactForm.get('message')?.touched && contactForm.get('message')?.invalid
             "
+            [class.!bg-red-50]="
+              contactForm.get('message')?.touched && contactForm.get('message')?.invalid
+            "
+            placeholder="Tell us more about your inquiry..."
           ></textarea>
-          <div class="char-count">
-            <span>{{ contactForm.get('message')?.value?.length || 0 }}</span> / 2000
+          <div class="flex justify-between items-center mt-2">
+            <span class="text-xs text-gray-500">
+              {{ contactForm.get('message')?.value?.length || 0 }} / 2000 characters
+            </span>
           </div>
           @if (getFieldError('message')) {
-          <span class="error-message">
-            <i class="fas fa-exclamation-circle"></i>
+          <p
+            class="mt-2 text-sm text-red-600 flex items-center gap-1 animate-[slideIn_0.3s_ease-out]"
+          >
+            <i class="fas fa-exclamation-circle text-xs"></i>
             {{ getFieldError('message') }}
-          </span>
+          </p>
           }
         </div>
 
         <!-- Submit Button -->
         <button
           type="submit"
-          class="submit-btn"
           [disabled]="isSubmitting"
-          [class.loading]="isSubmitting"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-3.5 bg-linear-to-r from-blue-600 to-blue-700 text-white font-medium rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 group"
         >
           @if (isSubmitting) {
-          <i class="fas fa-spinner fa-spin"></i>
-          <span>Transmitting...</span>
+          <span
+            class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"
+          ></span>
+          <span>Sending...</span>
           } @else {
-          <i class="fas fa-paper-plane"></i>
           <span>Send Message</span>
+          <i
+            class="fas fa-arrow-right text-sm group-hover:translate-x-1 transition-transform duration-200"
+          ></i>
           }
         </button>
       </form>
 
       <!-- Success Message -->
       @if (submitSuccess) {
-      <div class="alert alert-success">
-        <i class="fas fa-check-circle"></i>
+      <div
+        class="mt-6 flex items-start gap-3 p-4 bg-green-50 border border-green-200 rounded-xl animate-[slideDown_0.4s_ease-out]"
+      >
+        <i class="fas fa-check-circle text-xl text-green-600 mt-0.5"></i>
         <div>
-          <strong>Transmission successful!</strong>
-          <p>Your message has been received. We'll get back to you soon.</p>
+          <p class="font-medium text-green-900">Message sent successfully!</p>
+          <p class="text-sm text-green-700 mt-1">
+            Thank you for reaching out. We'll get back to you within 24-48 hours.
+          </p>
         </div>
       </div>
       }
 
       <!-- Error Message -->
       @if (submitError) {
-      <div class="alert alert-error">
-        <i class="fas fa-times-circle"></i>
+      <div
+        class="mt-6 flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-xl animate-[slideDown_0.4s_ease-out]"
+      >
+        <i class="fas fa-exclamation-circle text-xl text-red-600 mt-0.5"></i>
         <div>
-          <strong>Transmission failed!</strong>
-          <p>Something went wrong. Please try again later.</p>
+          <p class="font-medium text-red-900">Something went wrong</p>
+          <p class="text-sm text-red-700 mt-1">
+            Please try again later or reach out to us directly via email.
+          </p>
         </div>
       </div>
       }
     </div>
 
     <!-- Info Cards -->
-    <div class="info-grid">
-      <div class="info-card glass-morphism">
-        <i class="fas fa-clock"></i>
-        <h3>Response Time</h3>
-        <p>Usually within 24-48 hours</p>
+    <div
+      class="grid grid-cols-1 sm:grid-cols-3 gap-6 animate-[slideUp_0.8s_ease-out_0.4s] animate-fill-both"
+    >
+      <div
+        class="bg-white rounded-xl p-6 text-center shadow-md shadow-gray-200/50 hover:shadow-xl hover:shadow-gray-200/60 hover:-translate-y-1 transition-all duration-300 group"
+      >
+        <div
+          class="inline-flex items-center justify-center w-14 h-14 bg-linear-to-br from-blue-50 to-blue-100 rounded-xl mb-4 group-hover:scale-110 transition-transform duration-300"
+        >
+          <i class="fas fa-clock text-2xl text-blue-600"></i>
+        </div>
+        <h3 class="text-base font-semibold text-gray-900 mb-2">Quick Response</h3>
+        <p class="text-sm text-gray-600 leading-relaxed">We typically respond within 24-48 hours</p>
       </div>
-      <div class="info-card glass-morphism">
-        <i class="fas fa-shield-halved"></i>
-        <h3>Secure</h3>
-        <p>Your data is encrypted & protected</p>
+      <div
+        class="bg-white rounded-xl p-6 text-center shadow-md shadow-gray-200/50 hover:shadow-xl hover:shadow-gray-200/60 hover:-translate-y-1 transition-all duration-300 group"
+      >
+        <div
+          class="inline-flex items-center justify-center w-14 h-14 bg-linear-to-br from-green-50 to-green-100 rounded-xl mb-4 group-hover:scale-110 transition-transform duration-300"
+        >
+          <i class="fas fa-shield-check text-2xl text-green-600"></i>
+        </div>
+        <h3 class="text-base font-semibold text-gray-900 mb-2">Secure & Private</h3>
+        <p class="text-sm text-gray-600 leading-relaxed">Your information is safe with us</p>
       </div>
-      <div class="info-card glass-morphism">
-        <i class="fas fa-users"></i>
-        <h3>Community</h3>
-        <p>Join 1000+ alumni network</p>
+      <div
+        class="bg-white rounded-xl p-6 text-center shadow-md shadow-gray-200/50 hover:shadow-xl hover:shadow-gray-200/60 hover:-translate-y-1 transition-all duration-300 group"
+      >
+        <div
+          class="inline-flex items-center justify-center w-14 h-14 bg-linear-to-br from-purple-50 to-purple-100 rounded-xl mb-4 group-hover:scale-110 transition-transform duration-300"
+        >
+          <i class="fas fa-users text-2xl text-purple-600"></i>
+        </div>
+        <h3 class="text-base font-semibold text-gray-900 mb-2">Active Community</h3>
+        <p class="text-sm text-gray-600 leading-relaxed">Join our network of 1,000+ alumni</p>
       </div>
     </div>
   </div>
