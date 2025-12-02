@@ -1,0 +1,194 @@
+<div class="contact-container">
+  <!-- Animated Background -->
+  <div class="background-gradient"></div>
+
+  <!-- Particles -->
+  <div class="particles">
+    @for (particle of particles; track particle) {
+    <div
+      class="particle"
+      [style.left.%]="particle.x"
+      [style.top.%]="particle.y"
+      [style.width.px]="particle.size"
+      [style.height.px]="particle.size"
+      [style.animation-delay.s]="particle.delay"
+    ></div>
+    }
+  </div>
+
+  <!-- Main Content -->
+  <div class="content">
+    <div class="header-section">
+      <div class="icon-wrapper">
+        <i class="fas fa-satellite-dish"></i>
+      </div>
+      <h1 class="title"><span class="text-gradient">Establish</span> Connection</h1>
+      <p class="subtitle">
+        <i class="fas fa-terminal"></i>
+        Initialize communication protocol with the CSEDI network
+      </p>
+    </div>
+
+    <!-- Contact Form Card -->
+    <div class="form-card glass-morphism">
+      <div class="card-header">
+        <i class="fas fa-code"></i>
+        <span class="typing-text">contact_form.execute()</span>
+      </div>
+
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form">
+        <!-- Name Field -->
+        <div class="form-group">
+          <label for="name" class="form-label">
+            <i class="fas fa-user-astronaut"></i>
+            <span>Identification</span>
+          </label>
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            class="form-input"
+            placeholder="Enter your name..."
+            [class.error]="contactForm.get('name')?.touched && contactForm.get('name')?.invalid"
+          />
+          @if (getFieldError('name')) {
+          <span class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ getFieldError('name') }}
+          </span>
+          }
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email" class="form-label">
+            <i class="fas fa-at"></i>
+            <span>Communication Channel</span>
+          </label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            class="form-input"
+            placeholder="your.email@domain.com"
+            [class.error]="contactForm.get('email')?.touched && contactForm.get('email')?.invalid"
+          />
+          @if (getFieldError('email')) {
+          <span class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ getFieldError('email') }}
+          </span>
+          }
+        </div>
+
+        <!-- Subject Field -->
+        <div class="form-group">
+          <label for="subject" class="form-label">
+            <i class="fas fa-hashtag"></i>
+            <span>Subject Protocol</span>
+          </label>
+          <input
+            id="subject"
+            type="text"
+            formControlName="subject"
+            class="form-input"
+            placeholder="What's on your mind?"
+            [class.error]="
+              contactForm.get('subject')?.touched && contactForm.get('subject')?.invalid
+            "
+          />
+          @if (getFieldError('subject')) {
+          <span class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ getFieldError('subject') }}
+          </span>
+          }
+        </div>
+
+        <!-- Message Field -->
+        <div class="form-group">
+          <label for="message" class="form-label">
+            <i class="fas fa-message-lines"></i>
+            <span>Data Transmission</span>
+          </label>
+          <textarea
+            id="message"
+            formControlName="message"
+            class="form-textarea"
+            rows="6"
+            placeholder="Type your message here..."
+            [class.error]="
+              contactForm.get('message')?.touched && contactForm.get('message')?.invalid
+            "
+          ></textarea>
+          <div class="char-count">
+            <span>{{ contactForm.get('message')?.value?.length || 0 }}</span> / 2000
+          </div>
+          @if (getFieldError('message')) {
+          <span class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ getFieldError('message') }}
+          </span>
+          }
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="submit-btn"
+          [disabled]="isSubmitting"
+          [class.loading]="isSubmitting"
+        >
+          @if (isSubmitting) {
+          <i class="fas fa-spinner fa-spin"></i>
+          <span>Transmitting...</span>
+          } @else {
+          <i class="fas fa-paper-plane"></i>
+          <span>Send Message</span>
+          }
+        </button>
+      </form>
+
+      <!-- Success Message -->
+      @if (submitSuccess) {
+      <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i>
+        <div>
+          <strong>Transmission successful!</strong>
+          <p>Your message has been received. We'll get back to you soon.</p>
+        </div>
+      </div>
+      }
+
+      <!-- Error Message -->
+      @if (submitError) {
+      <div class="alert alert-error">
+        <i class="fas fa-times-circle"></i>
+        <div>
+          <strong>Transmission failed!</strong>
+          <p>Something went wrong. Please try again later.</p>
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- Info Cards -->
+    <div class="info-grid">
+      <div class="info-card glass-morphism">
+        <i class="fas fa-clock"></i>
+        <h3>Response Time</h3>
+        <p>Usually within 24-48 hours</p>
+      </div>
+      <div class="info-card glass-morphism">
+        <i class="fas fa-shield-halved"></i>
+        <h3>Secure</h3>
+        <p>Your data is encrypted & protected</p>
+      </div>
+      <div class="info-card glass-morphism">
+        <i class="fas fa-users"></i>
+        <h3>Community</h3>
+        <p>Join 1000+ alumni network</p>
+      </div>
+    </div>
+  </div>
+</div>

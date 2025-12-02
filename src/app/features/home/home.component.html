@@ -7,7 +7,13 @@
           <h1 class="text-2xl font-bold text-gray-900">CSEDI Alumni Network</h1>
         </div>
 
-        <div>
+        <div class="flex items-center space-x-4">
+          <a
+            routerLink="/contact"
+            class="px-4 py-2 text-gray-700 hover:text-blue-600 transition-colors font-semibold"
+          >
+            Contact
+          </a>
           @if (isAuthenticated$ | async) {
           <div class="flex items-center space-x-4">
             @if (user$ | async; as user) {
@@ -144,9 +150,15 @@
   <!-- Footer -->
   <footer class="bg-white mt-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <p class="text-center text-gray-500 text-sm">
-        © 2025 CSEDI Alumni Network. All rights reserved.
-      </p>
+      <div class="flex justify-between items-center">
+        <p class="text-gray-500 text-sm">© 2025 CSEDI Alumni Network. All rights reserved.</p>
+        <a
+          routerLink="/contact"
+          class="text-blue-600 hover:text-blue-700 transition-colors font-semibold"
+        >
+          Contact Us
+        </a>
+      </div>
     </div>
   </footer>
 </div>
